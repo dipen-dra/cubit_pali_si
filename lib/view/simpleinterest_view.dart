@@ -1,82 +1,79 @@
-// lib/view/si_view.dart
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_app_flutter/cubit/simple_cubit.dart';
 
-class SiView extends StatelessWidget {
-  const SiView({super.key});
+class SimpleInterestView extends StatelessWidget {
+  const SimpleInterestView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    final _pController = TextEditingController(text: "100");
-    final _tController = TextEditingController(text: "10");
-    final _rController = TextEditingController(text: "11");
-
+    final principalController = TextEditingController() ;
+    final interestController = TextEditingController() ;
+    final timeController = TextEditingController() ;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Simple Interest Calculation"),
-        backgroundColor: Colors.blue,
-        centerTitle: true,
+        title: Center(child: Text("Simple Interest")),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildInput(_pController, "Enter the principal amount"),
-              const SizedBox(height: 8),
-              _buildInput(_tController, "Enter the time"),
-              const SizedBox(height: 8),
-              _buildInput(_rController, "Enter the interest rate"),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.greenAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      int p = int.parse(_pController.text);
-                      int t = int.parse(_tController.text);
-                      int r = int.parse(_rController.text);
-                      context.read<SiCubit>().calculate(p, t, r);
-                    }
-                  },
-                  child: const Text("Calculate Simple Interest"),
-                ),
+      body: SafeArea(child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TextFormField(
+              controller: principalController,
+              decoration: InputDecoration(
+                  labelText: "Enter principle amount" ,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)
+                  )
               ),
-              const SizedBox(height: 8),
-              BlocBuilder<SiCubit, SiState>(
-                builder: (context, state) => Text(
-                  "Simple Interest: ${state.result}",
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildInput(TextEditingController controller, String label) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: TextInputType.number,
-      validator: (value) =>
-          value == null || value.isEmpty ? "Required field" : null,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+            ) ,
+            SizedBox(height: 18,) ,
+            TextFormField(
+              controller: interestController,
+              decoration: InputDecoration(
+                  labelText: "Enter Interest amount" ,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)
+                  )
+              ),
+
+            ) ,
+
+            SizedBox(height: 18,) ,
+            TextFormField(
+              controller: timeController,
+              decoration: InputDecoration(
+                  labelText: "Enter Time" ,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)
+                  )
+              ),
+            ) ,
+            SizedBox(height: 30,) ,
+            ElevatedButton(onPressed: (){
+           context.read<SimpleInterestCubit>().calculateInterest(int.parse(principalController.text), int.parse(interestController.text), int.parse(timeController.text)) ;
+              
+            }, child: const Text("Calculate")) ,
+            SizedBox(height: 30,),
+            BlocBuilder<SimpleInterestCubit , int>(builder: (context , state){
+              return Text(
+                '$state'  ,
+                style: const TextStyle(
+                    fontSize: 48 ,
+                    fontWeight: FontWeight.bold
+                ),
+
+              ) ;
+            }) ,
+
+
+          ],
         ),
-      ),
-    );
+      )),
+
+    ) ;
   }
 }

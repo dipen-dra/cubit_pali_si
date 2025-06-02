@@ -1,18 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app_flutter/serviceLocator/service_locator.dart';
 import 'package:my_app_flutter/view/splash_view.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+import 'cubit/dashboard_cubit.dart';
 
-  // This widget is the root of your application.
+
+class App extends StatelessWidget {
+  const App({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: SplashScreen(),
-    );
+      debugShowCheckedModeBanner: false,
+      home:  BlocProvider.value(value: serviceLocator<DashboardCubit>() ,
+        child: SplashScreen(),),
+    ) ;
   }
 }

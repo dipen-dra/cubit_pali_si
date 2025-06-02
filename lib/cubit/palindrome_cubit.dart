@@ -1,18 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PalindromeState {
-  final String result;
-  const PalindromeState(this.result);
-}
+class PalindromeCubit extends Cubit<String> {
+  PalindromeCubit() : super("Result");
 
-class PalindromeCubit extends Cubit<PalindromeState> {
-  PalindromeCubit() : super(const PalindromeState(''));
+  void checkPalindrome(String inputText) {
+    String cleanedText = inputText
+        .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '')
+        .toLowerCase();
+    String reversedText = cleanedText.split('').reversed.join();
 
-  void checkPalindrome(String text) {
-    final cleaned = text.replaceAll(RegExp(r'\s+'), '').toLowerCase();
-    final isPalindrome = cleaned == cleaned.split('').reversed.join('');
-    emit(
-      PalindromeState(isPalindrome ? "It is a Palindrome" : "Not a Palindrome"),
-    );
+    if (cleanedText == reversedText) {
+      emit(" The input is a palindrome");
+    } else {
+      emit(" The input is not a palindrome");
+    }
   }
 }
